@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, ExternalLink, FileText } from 'lucide-react';
+import { getFileUrl } from '../../services/api';
 
 export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
   if (!isOpen || !certificate) return null;
@@ -33,7 +34,7 @@ export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
           {hasImage && (
             <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'auto' }}>
               <img
-                src={certificate.imageUrl}
+                src={getFileUrl(certificate.imageUrl)}
                 alt={certificate.certificateTitle}
                 style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 'var(--radius-md)' }}
               />
@@ -43,7 +44,7 @@ export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
           {/* Automatically display PDF if uploaded as PDF only */}
           {!hasImage && hasPdf && (
             <iframe
-              src={certificate.pdfUrl}
+              src={getFileUrl(certificate.pdfUrl)}
               title={certificate.certificateTitle}
               style={{ width: '100%', height: '100%', border: 'none', borderRadius: 'var(--radius-md)', background: '#ffffff' }}
             />
@@ -61,7 +62,7 @@ export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
         <div className="modal-footer">
           {hasImage && (
             <a
-              href={certificate.imageUrl}
+              href={getFileUrl(certificate.imageUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary btn-sm"
@@ -71,7 +72,7 @@ export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
           )}
           {!hasImage && hasPdf && (
             <a
-              href={certificate.pdfUrl}
+              href={getFileUrl(certificate.pdfUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary btn-sm"
@@ -81,7 +82,7 @@ export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
           )}
           {hasImage && hasPdf && (
             <a
-              href={certificate.pdfUrl}
+              href={getFileUrl(certificate.pdfUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary btn-sm"

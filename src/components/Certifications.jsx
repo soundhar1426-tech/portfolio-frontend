@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Award, FileText, Eye, Edit3, Trash2, Calendar, Building2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { fetchCertificates, createCertificate, updateCertificate, deleteCertificate } from '../services/api';
+import { fetchCertificates, createCertificate, updateCertificate, deleteCertificate, getFileUrl } from '../services/api';
 import { CertificateModal } from './modals/CertificateModal';
 import { CertificateViewer } from './modals/CertificateViewer';
 import { ConfirmDeleteModal } from './modals/ConfirmDeleteModal';
@@ -168,13 +168,13 @@ export const Certifications = ({ addToast }) => {
                 <div className="certificate-preview-box" onClick={() => handleViewClick(cert)}>
                   {cert.imageUrl ? (
                     <img
-                      src={cert.imageUrl}
+                      src={getFileUrl(cert.imageUrl)}
                       alt={cert.certificateTitle}
                       className="certificate-preview-img"
                     />
                   ) : cert.pdfUrl ? (
                     <PdfThumbnail
-                      pdfUrl={cert.pdfUrl}
+                      pdfUrl={getFileUrl(cert.pdfUrl)}
                       alt={cert.certificateTitle}
                       className="certificate-preview-img"
                     />

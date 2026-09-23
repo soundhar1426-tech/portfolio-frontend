@@ -1,6 +1,17 @@
 const rawBaseUrl = import.meta.env.VITE_API_URL || '';
 const API_BASE = rawBaseUrl ? `${rawBaseUrl.replace(/\/$/, '')}/api` : '/api';
 
+// Helper to resolve full asset URLs for uploads
+export const getFileUrl = (filePath) => {
+  if (!filePath) return '';
+  if (filePath.startsWith('http://') || filePath.startsWith('https://') || filePath.startsWith('data:') || filePath.startsWith('blob:')) {
+    return filePath;
+  }
+  const cleanBase = rawBaseUrl.replace(/\/$/, '');
+  const cleanPath = filePath.startsWith('/') ? filePath : `/${filePath}`;
+  return cleanBase ? `${cleanBase}${cleanPath}` : cleanPath;
+};
+
 // Helper for fetch requests
 const request = async (url, options = {}) => {
   try {
