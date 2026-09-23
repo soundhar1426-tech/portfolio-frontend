@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Outer Window Body (Black) -->
+  <rect x="32" y="32" width="448" height="448" rx="88" fill="#000000" />
+  
+  <!-- Header controls (White on Black) -->
+  <circle cx="106" cy="112" r="16" fill="#ffffff" />
+  <circle cx="152" cy="112" r="16" fill="#ffffff" />
+  <rect x="194" y="96" width="186" height="32" rx="16" fill="#ffffff" />
+  
+  <!-- Content Area (White Rect) -->
+  <rect x="76" y="164" width="360" height="248" rx="8" fill="#ffffff" />
+  
+  <!-- Content: Avatar Head -->
+  <circle cx="178" cy="236" r="34" fill="#000000" />
+  
+  <!-- Content: Avatar Torso -->
+  <path d="M 124 294 C 124 286 130 280 138 280 L 218 280 C 226 280 232 286 232 294 C 232 328 208 350 178 350 C 148 350 124 328 124 294 Z" fill="#000000" />
+  
+  <!-- Content: 3 text lines -->
+  <rect x="256" y="204" width="102" height="30" rx="15" fill="#000000" />
+  <rect x="256" y="262" width="102" height="30" rx="15" fill="#000000" />
+  <rect x="256" y="320" width="102" height="30" rx="15" fill="#000000" />
+</svg>
