@@ -12,18 +12,25 @@ export const getFileUrl = (filePath) => {
   return cleanBase ? `${cleanBase}${cleanPath}` : cleanPath;
 };
 
-// Helper for fetch requests
-const request = async (url, options = {}) => {
-  try {
-    const res = await fetch(url, options);
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.message || `HTTP error! status: ${res.status}`);
+// Helper for fetch requests with automatic retry on initial wake-up
+const request = async (url, options = {}, retries = 2) => {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || `HTTP error! status: ${res.status}`);
+      }
+      return data;
+    } catch (error) {
+      if (attempt < retries) {
+        console.warn(`[API] Retrying request to ${url} (attempt ${attempt + 1}/${retries})...`);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        continue;
+      }
+      console.error(`API Error on ${url}:`, error);
+      throw error;
     }
-    return data;
-  } catch (error) {
-    console.error(`API Error on ${url}:`, error);
-    throw error;
   }
 };
 
