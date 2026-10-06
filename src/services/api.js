@@ -1,5 +1,7 @@
-const rawBaseUrl = import.meta.env.VITE_API_URL || '';
-const API_BASE = rawBaseUrl ? `${rawBaseUrl.replace(/\/$/, '')}/api` : '/api';
+const rawBaseUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
+const API_BASE = rawBaseUrl
+  ? (rawBaseUrl.endsWith('/api') ? rawBaseUrl : `${rawBaseUrl}/api`)
+  : '/api';
 
 // Helper to resolve full asset URLs for uploads
 export const getFileUrl = (filePath) => {
@@ -7,7 +9,7 @@ export const getFileUrl = (filePath) => {
   if (filePath.startsWith('http://') || filePath.startsWith('https://') || filePath.startsWith('data:') || filePath.startsWith('blob:')) {
     return filePath;
   }
-  const cleanBase = rawBaseUrl.replace(/\/$/, '');
+  const cleanBase = rawBaseUrl.replace(/\/api$/, '').replace(/\/+$/, '');
   const cleanPath = filePath.startsWith('/') ? filePath : `/${filePath}`;
   return cleanBase ? `${cleanBase}${cleanPath}` : cleanPath;
 };
