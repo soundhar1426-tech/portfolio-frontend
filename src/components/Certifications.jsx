@@ -7,6 +7,33 @@ import { CertificateViewer } from './modals/CertificateViewer';
 import { ConfirmDeleteModal } from './modals/ConfirmDeleteModal';
 import { CardSkeleton } from './ui/Skeleton';
 import { PdfThumbnail } from './PdfThumbnail';
+const CertificateCardPreview = ({ cert, onOpen }) => {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div className="certificate-preview-box" onClick={onOpen}>
+      {cert.imageUrl && !imgError ? (
+        <img
+          src={getFileUrl(cert.imageUrl)}
+          alt={cert.certificateTitle}
+          className="certificate-preview-img"
+          onError={() => setImgError(true)}
+        />
+      ) : cert.pdfUrl ? (
+        <PdfThumbnail
+          pdfUrl={getFileUrl(cert.pdfUrl)}
+          alt={cert.certificateTitle}
+          className="certificate-preview-img"
+        />
+      ) : (
+        <div className="certificate-fallback-box">
+          <FileText size={48} color="var(--accent-primary)" />
+          <span style={{ fontSize: '0.85rem' }}>PDF Certificate</span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const Certifications = ({ addToast }) => {
   const { requireAuth } = useAuth();
@@ -164,27 +191,8 @@ export const Certifications = ({ addToast }) => {
           <div className="certificates-grid">
             {certificates.map((cert) => (
               <div key={cert._id} className="certificate-card">
-                {/* Image Preview Box */}
-                <div className="certificate-preview-box" onClick={() => handleViewClick(cert)}>
-                  {cert.imageUrl ? (
-                    <img
-                      src={getFileUrl(cert.imageUrl)}
-                      alt={cert.certificateTitle}
-                      className="certificate-preview-img"
-                    />
-                  ) : cert.pdfUrl ? (
-                    <PdfThumbnail
-                      pdfUrl={getFileUrl(cert.pdfUrl)}
-                      alt={cert.certificateTitle}
-                      className="certificate-preview-img"
-                    />
-                  ) : (
-                    <div className="certificate-fallback-box">
-                      <FileText size={48} color="var(--accent-primary)" />
-                      <span style={{ fontSize: '0.85rem' }}>PDF Certificate</span>
-                    </div>
-                  )}
-                </div>
+                {/* Image Preview Box with error fallback */}
+                <CertificateCardPreview cert={cert} onOpen={() => handleViewClick(cert)} />
 
                 <div className="certificate-body">
                   <span className="cert-org-badge">{cert.organization}</span>

@@ -1,11 +1,17 @@
-import React from 'react';
-import { X, ExternalLink, FileText } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, ExternalLink, FileText, AlertCircle } from 'lucide-react';
 import { getFileUrl } from '../../services/api';
 
 export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [certificate, isOpen]);
+
   if (!isOpen || !certificate) return null;
 
-  const hasImage = Boolean(certificate.imageUrl);
+  const hasImage = Boolean(certificate.imageUrl) && !imageError;
   const hasPdf = Boolean(certificate.pdfUrl);
 
   return (
@@ -31,27 +37,24 @@ export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
 
         <div className="modal-body" style={{ flex: 1, padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
           {/* Automatically display image if uploaded as image (or both) */}
-          {hasImage && (
+          {hasImage ? (
             <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'auto' }}>
               <img
                 src={getFileUrl(certificate.imageUrl)}
                 alt={certificate.certificateTitle}
                 style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 'var(--radius-md)' }}
+                onError={() => setImageError(true)}
               />
             </div>
-          )}
-
-          {/* Automatically display PDF if uploaded as PDF only */}
-          {!hasImage && hasPdf && (
+          ) : hasPdf ? (
+            /* Automatically display PDF if uploaded as PDF only (or image failed) */
             <iframe
               src={getFileUrl(certificate.pdfUrl)}
               title={certificate.certificateTitle}
               style={{ width: '100%', height: '100%', border: 'none', borderRadius: 'var(--radius-md)', background: '#ffffff' }}
             />
-          )}
-
-          {/* Fallback if no file is available */}
-          {!hasImage && !hasPdf && (
+          ) : (
+            /* Fallback if no file is available */
             <div className="empty-state" style={{ width: '100%' }}>
               <FileText size={40} style={{ marginBottom: '1rem', color: 'var(--text-muted)' }} />
               <p>No document attached for this certificate.</p>
@@ -60,7 +63,7 @@ export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
         </div>
 
         <div className="modal-footer">
-          {hasImage && (
+          {certificate.imageUrl && !imageError && (
             <a
               href={getFileUrl(certificate.imageUrl)}
               target="_blank"
@@ -70,17 +73,7 @@ export const CertificateViewer = ({ certificate, isOpen, onClose }) => {
               <ExternalLink size={14} /> Open Full Size
             </a>
           )}
-          {!hasImage && hasPdf && (
-            <a
-              href={getFileUrl(certificate.pdfUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-secondary btn-sm"
-            >
-              <ExternalLink size={14} /> Open PDF
-            </a>
-          )}
-          {hasImage && hasPdf && (
+          {certificate.pdfUrl && (
             <a
               href={getFileUrl(certificate.pdfUrl)}
               target="_blank"
